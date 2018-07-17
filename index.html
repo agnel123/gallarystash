@@ -142,8 +142,8 @@
             </footer>
             <div ng-repeat="category in icon.children|limitTo:5" style="display: inline-block">
               <div>
-                <div ng-repeat="filename in category.children|limitTo:6| filter:search" ng-if="filename.name.indexOf('original') !== -1" style="display: inline-block;padding: 10px">
-                  <img src="/{{icon.name}}/{{category.name}}/{{filename.name}}" height="42" width="42" ng-class="{'selected': category.selected,icon.selected}"
+                <div ng-repeat="filename in category.children|limitTo:2| filter:search" style="display: inline-block;padding: 10px">
+                  <img src="/{{icon.name}}/{{category.name}}/{{filename.name}}" height="150" width="200" ng-class="{'selected': category.selected,icon.selected}"
                     ng-click="selectIcon(category,icon)" />
                 </div>
               </div>
@@ -158,14 +158,24 @@
             </footer>
             <li class="list-inline-item" ng-repeat="icon in icons.children" ng-if="selectedCategory != null" class="col-md-4" style="display: inline-block"
               ng-if="categroy">
-              <ul class="list-inline-item" div ng-repeat="category in icon.children | filter:search" style="display: inline-block">
-                <ul class="list-inline" ng-if="category.name.indexOf('original') !== -1">
-                  <li>
-                    <img src="/{{selectedCategory.name}}/{{icon.name}}/{{category.name}}" height="42" width="42" ng-class="{'selected': icon.selected}"
-                      ng-click="selectIcon(icon,selectedCategory)" />
-                  </li>
-                </ul>
-              </ul>
+              {{icon.name}}<br>
+
+              <div class="background" style="width: 710px; height: 200px; white-space: nowrap; overflow-x: scroll; border: 0; padding: 10px;"> 
+                  <ul class="list-inline-item" div ng-repeat="category in icon.children | filter:search" style="display: inline-block">
+                      
+                    <ul class="list-inline">
+                      <li>
+                          <a href="/images/sonakshi-sinha/60810/#w" id="wall_prev" class="wall-prev" style="display: inline-block;"></a>
+                        <img src="/{{selectedCategory.name}}/{{icon.name}}/{{category.name}}" height="150" width="200" ng-class="{'selected': icon.selected}"
+                          ng-click="selectIcon(icon,selectedCategory)" />
+                      </li>
+                    </ul>
+                  </ul>
+
+               </div>
+
+
+             
             </li>
           </ul>
         </div>
@@ -174,7 +184,7 @@
         <ul class="list-inline">
           <li ng-repeat="icon in detailicons.children" class="list-inline-item">
             <p>
-              <img src="{{fullpath}}/{{icon.name}}" style="border:solid 1px red" height="42" width="42" ng-class="{'selected': icon.selected}"
+              <img src="{{fullpath}}/{{icon.name}}" style="border:solid 1px red" height="150" width="200" ng-class="{'selected': icon.selected}"
                 ng-click="selectSVGVersion(icon)" />
             </p>
           </li>
