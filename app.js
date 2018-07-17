@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 var path = require('path');
-var Svg = require('svgutils').Svg;
+//var Svg = require('svgutils').Svg;
 const makeIcon  = require('./utils').makeIcon;
 app.use(express.static('icons'));
 const Filehound = require('filehound');
@@ -24,43 +24,55 @@ app.get('/category',function(req,res){
         currentDirPath = path.resolve(__dirname)+'/icons/' + iconname +'/'+ categoryname;
 
     console.log(currentDirPath);
-    const tree = dirTree(currentDirPath, {extensions:/\.svg/});
+    const tree = dirTree(currentDirPath, {extensions:/\.jpg/});
+    console.log(tree);
     res.json(tree);
 });
 
-app.get('/icons/:categoryname/:iconname/:filename.svg',function(req,reply,next){    
-    var size = 40;
+app.get('/icons/:categoryname/:iconname/:filename.jpg',function(req,reply,next){ 
+    
+    console.log("started...");
+    var size = 100;
     var requestedSize = req.query.size;
     if(requestedSize) size = requestedSize;
     var categoryname = req.params.categoryname;
     var iconname = req.params.iconname;
-    var filename = req.params.filename + '.svg';
+    var filename = req.params.filename + '.jpg';
     
-    var currenticon = fs.readFileSync(
-        require.resolve(path.join(__dirname + '/icons/'+categoryname+'/'+iconname+'/'+filename)),
-        'utf8'
-      );
-    
-    makeIcon(currenticon, req.query)
-    .then(res => {
-      const referer = req.headers.referer || '';
-      if (referer.indexOf(req.get('host')) < 0 && global.production) {
-        req.visitor.event(
-          {
-            ec: req.baseUrl.substr(1),
-            ea: req.params.icon,
-            el: referer,
-            uip: req.ip,
-            dr: referer
-          },
-          err => (err ? console.error(err) : null)
-        );
-      }
-      reply.type('image/svg+xml').send(res);
-    }).catch(err => {
-        console.error(err);
-        next(err);
+    // var currenticon = fs.readFileSync(
+    //     require.resolve(path.join(__dirname + '/icons/'+categoryname+'/'+iconname+'/'+filename)),
+    //     'utf8'
+    //   );
+
+      fs.readFile(path.join(__dirname + '/icons/'+categoryname+'/'+iconname+'/'+filename), function (err, data) {
+        if (err) throw err;
+        reply.write(data);
       });
+      
+      //reply.send(res);
+
+    //  console.log('currenticont::'+currenticon);
+    
+    // makeIcon(currenticon, req.query)
+    // .then(res => {
+    //   const referer = req.headers.referer || '';
+    //   if (referer.indexOf(req.get('host')) < 0 && global.production) {
+    //     req.visitor.event(
+    //       {
+    //         ec: req.baseUrl.substr(1),
+    //         ea: req.params.icon,
+    //         el: referer,
+    //         uip: req.ip,
+    //         dr: referer
+    //       },
+    //       err => (err ? console.error(err) : null)
+    //     );
+    //   }
+    //   reply.type('image/jpg').send(res);
+    // }).catch(err => {
+    //     console.error(err);
+    //     next(err);
+    //   });
     
  
 });
