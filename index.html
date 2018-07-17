@@ -10,10 +10,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>Devicon</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css" charset="utf-8">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <style media="screen">
 
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+  <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css" charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+  <style media="screen">
   body {
       /* margin: 5rem; */
       text-align: center;
@@ -39,14 +45,14 @@
       a {
       color: white;
     }
-
     a:hover {
       color: greenyellow;
     }
-
     img {
-      max-width: 5rem;
+      /* /max-width: 5rem; */
+    
     }
+    
     h4 {
       /* margin: 0; */
       color: #60be86;
@@ -72,6 +78,17 @@
       color: white;
       padding: 5px;
     }
+
+    .imglimit img{
+         max-width: 10rem;
+         max-height: 10rem;
+    }
+
+    .ImageBorder img
+    {
+      width: 100%;
+      border: 5px solid #4CAF50;
+    }
     
     /* On small screens, set height to 'auto' for sidenav and grid */
     @media screen and (max-width: 767px) {
@@ -93,24 +110,20 @@
      button:active {
       background: olive;
     }
-
     button:focus {
       background: olive;
     }
-
     .alignleft {
       float: left;
     }
-
     .alignright {
       float: right;
     }
-
   </style>
 </head>
 <body ng-app="app" ng-controller="IconsCtrl">
   <div class="container">
-    <h1 class="jumbotron-heading">Free Icons</h1>
+    <!-- <h1 class="jumbotron-heading">Free Icons</h1> -->
     <p class="lead text-muted">the only service which gives free icons for you </p>
   </div>
   <div class="container-fluid text-center">
@@ -134,14 +147,16 @@
           <input type="text" id="search" placeholder="Search for icons in: {{selectedCategory.name}}" ng-model="search.name" size="50">
         </div>
         <div class="row">
+          
+          
           <div ng-repeat="icon in icons.children" ng-if="selectedCategory == null" class="col-md-4" style="display: inline-block">
             <footer class="bg-sun-flower">
               <a href="" ng-class="{'selected': icon.selected}" ng-click="selectCategory(icon)">
                 {{icon.name}}
                 </a>
             </footer>
-            <div ng-repeat="category in icon.children|limitTo:5" style="display: inline-block">
-              <div>
+            <div ng-repeat="category in icon.children|limitTo:3" style="display: inline-block">
+              <div class="imglimit">
                 <div ng-repeat="filename in category.children|limitTo:2| filter:search" style="display: inline-block;padding: 10px">
                   <img src="/{{icon.name}}/{{category.name}}/{{filename.name}}" height="150" width="200" ng-class="{'selected': category.selected,icon.selected}"
                     ng-click="selectIcon(category,icon)" />
@@ -150,7 +165,11 @@
             </div>
             <button type="button" class="btn btn-warning btn-sm" style='margin:0;padding:0' ng-class="{'selected': icon.selected}" ng-click="selectCategory(icon)">More...</button>
           </div>
+
+
           <ul class="list-inline">
+
+
             <footer class="sm-sun-flower" ng-if="selectedCategory != null" >
               <p class="alignleft">{{selectedCategory.name}}</p>
               <p class="alignright"><a href="javascript:window.location.href = '/';">Back to Home</a></p>
@@ -159,51 +178,56 @@
             <li class="list-inline-item" ng-repeat="icon in icons.children" ng-if="selectedCategory != null" class="col-md-4" style="display: inline-block"
               ng-if="categroy">
               {{icon.name}}<br>
-
-              <div class="background" style="width: 710px; height: 200px; white-space: nowrap; overflow-x: scroll; border: 0; padding: 10px;"> 
-                  <ul class="list-inline-item" div ng-repeat="category in icon.children | filter:search" style="display: inline-block">
-                      
-                    <ul class="list-inline">
-                      <li>
-                          <a href="/images/sonakshi-sinha/60810/#w" id="wall_prev" class="wall-prev" style="display: inline-block;"></a>
-                        <img src="/{{selectedCategory.name}}/{{icon.name}}/{{category.name}}" height="150" width="200" ng-class="{'selected': icon.selected}"
-                          ng-click="selectIcon(icon,selectedCategory)" />
+              <div class="background" style="width: 710px; height: 200px; white-space: nowrap; overflow-x: scroll; border: 0; padding: 10px;">
+                <ul class="list-inline-item" div ng-repeat="category in icon.children | filter:search" style="display: inline-block">
+                  <ul class="list-inline">
+                      <li >
+                        <img class="ImageBorder" src="/{{selectedCategory.name}}/{{icon.name}}/{{category.name}}" class="ImageBorder" height="150" width="200" ng-class="{'selected': icon.selected}"
+                          ng-click="selectSingleImage(category,icon)" />
                       </li>
                     </ul>
                   </ul>
-
                </div>
+             
+               
+               <!-- <div ng-if="selectedSVGVersionIcon" ng-show="icon.name == currentSelectedCategory"> -->
+                  <div ng-if="selectedSVGVersionIcon">
 
+                  <div id="{{icon.name}}" class="carousel slide" data-ride="carousel">
+                      <!-- Indicators -->
+                      <ol class="carousel-indicators">
+                        <li data-target="#{{icon.name}}" ng-repeat="category in icon.children | filter:search" data-slide-to="{{($index-1)+1}}" class="{{category.name == selectedSVGVersionIcon?'active':''}}"></li>
+                      </ol>
+                  
+                      <!-- Wrapper for slides -->
+                      <div class="carousel-inner" >
+                        <div class="item {{category.name == selectedSVGVersionIcon?'active':''}}" ng-repeat="category in icon.children">
+                            <img src="/{{selectedCategory.name}}/{{icon.name}}/{{category.name}}" alt="category.name" style="width:100%;">
+                        </div>
+                      </div>
+                  
+                      <!-- Left and right controls -->
+                      <a class="left carousel-control" href="#{{icon.name}}" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                        <span class="sr-only">Previous</span>
+                      </a>
+                      <a class="right carousel-control" href="#{{icon.name}}" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                        <span class="sr-only">Next</span>
+                      </a>
+                    </div>
 
+                  <!-- <img src="{{fullpath}}/{{icon.name}}/{{selectedSVGVersionIcon}}" width="200" height="200"/> -->
+              
+             </div> 
              
             </li>
+           
+
           </ul>
         </div>
       </div>
-      <div class="col-sm-2 sidenav">
-        <ul class="list-inline">
-          <li ng-repeat="icon in detailicons.children" class="list-inline-item">
-            <p>
-              <img src="{{fullpath}}/{{icon.name}}" style="border:solid 1px red" height="150" width="200" ng-class="{'selected': icon.selected}"
-                ng-click="selectSVGVersion(icon)" />
-            </p>
-          </li>
-          <div ng-if="selectedSVGVersionIcon != null">
-            <font size="3">
-              <div class="row">
-                <div class="col-sm-5 scrollmenu" style="word-wrap: break-word" id="myInput">
-                  <a href="http://{{baseURL}}:{{port}}/icons{{fullpath}}/{{selectedSVGVersionIcon}}" target="_blank" id="foo">
-                                                  http://{{baseURL}}:{{port}}/icons{{fullpath}}/{{selectedSVGVersionIcon}}
-                  </a>
-                </div>
-                <div class="col-sm-2" style="word-wrap: break-word" id="myInput" ng-click-copy="http://{{baseURL}}:{{port}}/icons{{fullpath}}/{{selectedSVGVersionIcon}}">
-                  <button type="button" class="btn btn-secondary btn-xs">copy</button>
-                </div>
-              </div>
-            </font>
-          </div>
-        </ul>
-      </div>
+
       <div class="col-sm-1 sidenav">
       </div>
     </div>
@@ -218,7 +242,6 @@
     <script charset="utf-8">
       var app = angular.module("app", ['ngClickCopy']);
       app.controller('IconsCtrl',function($scope, $http) {
-
         $http.get('/category').then(function(res) {
           $scope.baseURL = window.location.hostname;
           $scope.port = window.location.port;
@@ -226,35 +249,42 @@
           $scope.categories = res.data.children;
           
         });
+        // $scope.selectIcon = function(category,icon)
+        // {
+        //   alert('started...');
+        //     //send these both of the objects to the controller and find out the locat
+        //     $scope.selectedSVGVersionIcon = null;   
+        //     $scope.selectedcategoryname = category.name;
+        //     $scope.selectediconname = icon.name;
 
-        $scope.selectIcon = function(category,icon)
-        {
-            //send these both of the objects to the controller and find out the locat
-            $scope.selectedSVGVersionIcon = null;   
-            $scope.selectedcategoryname = category.name;
-            $scope.selectediconname = icon.name;
-                var url = '/category?categoryname='+$scope.selectedcategoryname+'&iconname='+  $scope.selectediconname;
-                $http.get(url).then(function(res) {
-                    $scope.detailicons = res.data;
-                    $scope.fullpath = res.data.path.split("icons")[1];
-                });
-        }
+        //     alert($scope.selectedcategoryname);
+        //     alert($scope.selectediconname);
 
+
+        //         var url = '/category?categoryname='+$scope.selectedcategoryname+'&iconname='+  $scope.selectediconname;
+        //         $http.get(url).then(function(res) {
+        //             $scope.detailicons = res.data;
+        //             $scope.fullpath = res.data.path.split("icons")[1];
+        //             alert($scope.fullpath);
+        //         });
+        // }
         $scope.selectCategory = function(icon)
         {
             var url = '/category?categoryname='+icon.name;
             $http.get(url).then(function(res) {
                 $scope.selectedCategory= icon;
+                $scope.fullpath = res.data.path.split("icons")[1];
                 $scope.icons= res.data;
                 });
         }
-
-        $scope.selectSVGVersion = function(icon)
+        $scope.selectSingleImage = function(icon,category)
         {
-            $scope.selectedSVGVersionIcon = icon.name;   
+            $scope.selectedSVGVersionIcon = icon.name;
+            $scope.currentSelectedCategory = category.name;   
+            document.getElementById(icon.name).innerHTML = "";   
+           alert($scope.selectedSVGVersionIcon);
         
         }
-
       });
     </script>
 </body>
