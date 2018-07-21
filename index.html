@@ -158,7 +158,7 @@
             <div ng-repeat="category in icon.children|limitTo:3" style="display: inline-block">
               <div class="imglimit">
                 <div ng-repeat="filename in category.children|limitTo:2| filter:search" style="display: inline-block;padding: 10px">
-                  <img src="/{{icon.name}}/{{category.name}}/{{filename.name}}" height="150" width="200" ng-class="{'selected': category.selected,icon.selected}"
+                  <img src="/{{icon.name}}/{{category.name}}/thumb_{{filename.name}}" height="150" width="200" ng-class="{'selected': category.selected,icon.selected}"
                     ng-click="selectIcon(category,icon)" />
                 </div>
               </div>
@@ -202,7 +202,7 @@
                       <!-- Wrapper for slides -->
                       <div class="carousel-inner" >
                         <div class="item {{category.name == selectedSVGVersionIcon?'active':''}}" ng-repeat="category in icon.children">
-                            <img src="/{{selectedCategory.name}}/{{icon.name}}/{{category.name}}" alt="category.name" style="width:100%;">
+                            <img src="/{{selectedCategory.name}}/{{icon.name}}/thumb_{{category.name}}" alt="category.name" style="width:100%;">
                         </div>
                       </div>
                   
