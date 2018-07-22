@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
 
 
   <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css" charset="utf-8">
@@ -183,7 +185,7 @@
                   <ul class="list-inline">
                       <li >
                         <img class="ImageBorder" src="/{{selectedCategory.name}}/{{icon.name}}/{{category.name}}" class="ImageBorder" height="150" width="200" ng-class="{'selected': icon.selected}"
-                          ng-click="selectSingleImage(category,icon)" />
+                          ng-click="selectSingleImage(category,icon,$index)" />
                       </li>
                     </ul>
                   </ul>
@@ -191,32 +193,18 @@
              
                
                <!-- <div ng-if="selectedSVGVersionIcon" ng-show="icon.name == currentSelectedCategory"> -->
-                  <div ng-if="selectedSVGVersionIcon">
-
-                  <div id="{{icon.name}}" class="carousel slide" data-ride="carousel">
-                      <!-- Indicators -->
-                      <ol class="carousel-indicators">
-                        <li data-target="#{{icon.name}}" ng-repeat="category in icon.children | filter:search" data-slide-to="{{($index-1)+1}}" class="{{category.name == selectedSVGVersionIcon?'active':''}}"></li>
-                      </ol>
-                  
-                      <!-- Wrapper for slides -->
-                      <div class="carousel-inner" >
-                        <div class="item {{category.name == selectedSVGVersionIcon?'active':''}}" ng-repeat="category in icon.children">
-                            <img src="/{{selectedCategory.name}}/{{icon.name}}/thumb_{{category.name}}" alt="category.name" style="width:100%;">
-                        </div>
-                      </div>
-                  
-                      <!-- Left and right controls -->
-                      <a class="left carousel-control" href="#{{icon.name}}" data-slide="prev">
-                        <span class="glyphicon glyphicon-chevron-left"></span>
-                        <span class="sr-only">Previous</span>
-                      </a>
-                      <a class="right carousel-control" href="#{{icon.name}}" data-slide="next">
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                        <span class="sr-only">Next</span>
-                      </a>
-                    </div>
-
+                 
+                   <div ng-if="selectedSVGVersionIcon" ng-show="icon.name == currentSelectedCategory" >
+                 
+              <div>
+            <div class="w3-content w3-display-container" >
+              <img class="mySlides" ng-repeat="category in icon.children" src="/{{selectedCategory.name}}/{{icon.name}}/thumb_{{category.name}}" ng-show="$index == currentIndex"
+                style="width:100%">
+                 <button class="w3-button w3-black w3-display-left" ng-click="plusDivs(-1)">&#10094;</button>
+            <button class="w3-button w3-black w3-display-right" ng-click="plusDivs(1)">&#10095;</button>
+            </div>
+           
+          </div>
                   <!-- <img src="{{fullpath}}/{{icon.name}}/{{selectedSVGVersionIcon}}" width="200" height="200"/> -->
               
              </div> 
@@ -241,33 +229,17 @@
     <script type="text/javascript" src="https://cdn.rawgit.com/JustMaier/6ef7788709d675bd8230/raw/3d39d50e66d8d77e05656ed7dd09298be7e86f1f/ngClickCopy.js"></script>
     <script charset="utf-8">
       var app = angular.module("app", ['ngClickCopy']);
-      app.controller('IconsCtrl',function($scope, $http) {
+      app.controller('IconsCtrl',function($scope, $http,$document) {
+       
         $http.get('/category').then(function(res) {
           $scope.baseURL = window.location.hostname;
           $scope.port = window.location.port;
           $scope.icons = res.data;
           $scope.categories = res.data.children;
+         
           
         });
-        // $scope.selectIcon = function(category,icon)
-        // {
-        //   alert('started...');
-        //     //send these both of the objects to the controller and find out the locat
-        //     $scope.selectedSVGVersionIcon = null;   
-        //     $scope.selectedcategoryname = category.name;
-        //     $scope.selectediconname = icon.name;
-
-        //     alert($scope.selectedcategoryname);
-        //     alert($scope.selectediconname);
-
-
-        //         var url = '/category?categoryname='+$scope.selectedcategoryname+'&iconname='+  $scope.selectediconname;
-        //         $http.get(url).then(function(res) {
-        //             $scope.detailicons = res.data;
-        //             $scope.fullpath = res.data.path.split("icons")[1];
-        //             alert($scope.fullpath);
-        //         });
-        // }
+      
         $scope.selectCategory = function(icon)
         {
             var url = '/category?categoryname='+icon.name;
@@ -277,14 +249,19 @@
                 $scope.icons= res.data;
                 });
         }
-        $scope.selectSingleImage = function(icon,category)
-        {
+        $scope.selectSingleImage = function (icon, category,selectedcurrentIndex) {
+
             $scope.selectedSVGVersionIcon = icon.name;
-            $scope.currentSelectedCategory = category.name;   
-            document.getElementById(icon.name).innerHTML = "";   
-           alert($scope.selectedSVGVersionIcon);
-        
-        }
+            $scope.currentSelectedCategory = category.name;
+            $scope.showDivs(selectedcurrentIndex);
+
+          }
+          $scope.plusDivs = function (n) {
+            $scope.showDivs($scope.currentIndex += n);
+          }
+          $scope.showDivs = function (n) {
+            $scope.currentIndex = n;
+          }
       });
     </script>
 </body>
