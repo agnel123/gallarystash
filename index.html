@@ -17,6 +17,8 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
+ <link rel="stylesheet" type="text/css" href="css/gallary.css">
+
 
 
   <!-- <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css" charset="utf-8">
@@ -126,6 +128,7 @@
 <body ng-app="app" ng-controller="IconsCtrl">
   <div class="container">
     <!-- <h1 class="jumbotron-heading">Free Icons</h1> -->
+     <!-- <h1 class="jumbotron-heading">Free Icons</h1> -->
     <p class="lead text-muted">the only service which gives free icons for you </p>
   </div>
   <div class="container-fluid text-center">
@@ -167,21 +170,25 @@
             </div>
             <button type="button" class="btn btn-warning btn-sm" style='margin:0;padding:0' ng-class="{'selected': icon.selected}" ng-click="selectCategory(icon)">More...</button>
           </div>
-
-
           <ul class="list-inline">
-
-
             <footer class="sm-sun-flower" ng-if="selectedCategory != null" >
               <p class="alignleft">{{selectedCategory.name}}</p>
               <p class="alignright"><a href="javascript:window.location.href = '/';">Back to Home</a></p>
               <div style="clear: both;"></div>
             </footer>
-            <li class="list-inline-item" ng-repeat="icon in icons.children" ng-if="selectedCategory != null" class="col-md-4" style="display: inline-block"
+             <button  ng-click="currentPage=currentPage-1">
+            Previous
+        </button>  {{currentPage+1}}/{{numberOfPages()}}
+              <button ng-click="currentPage=currentPage+1">
+            Next
+        </button>
+            <li class="list-inline-item" ng-repeat="icon in icons.children|startFrom:currentPage*pageSize|limitTo:pageSize" ng-if="selectedCategory != null" class="col-md-4" style="display: inline-block"
               ng-if="categroy">
               {{icon.name}}<br>
               <div class="background" style="width: 710px; height: 200px; white-space: nowrap; overflow-x: scroll; border: 0; padding: 10px;">
-                <ul class="list-inline-item" div ng-repeat="category in icon.children | filter:search" style="display: inline-block">
+              
+              
+                <ul class="list-inline-item" div ng-repeat="category in icon.children | filter:search |startFrom:currentPage*pageSize| limitTo:pageSize " style="display: inline-block">
                   <ul class="list-inline">
                       <li >
                         <img class="ImageBorder" src="/{{selectedCategory.name}}/{{icon.name}}/{{category.name}}" class="ImageBorder" height="150" width="200" ng-class="{'selected': icon.selected}"
@@ -189,19 +196,20 @@
                       </li>
                     </ul>
                   </ul>
+
                </div>
-             
+          
+         
                
                <!-- <div ng-if="selectedSVGVersionIcon" ng-show="icon.name == currentSelectedCategory"> -->
                  
-                   <div ng-if="selectedSVGVersionIcon" ng-show="icon.name == currentSelectedCategory" >
-                 
+              <div ng-if="selectedSVGVersionIcon" ng-show="icon.name == currentSelectedCategory" >
               <div>
             <div class="w3-content w3-display-container" >
-              <img class="mySlides" ng-repeat="category in icon.children" src="/{{selectedCategory.name}}/{{icon.name}}/thumb_{{category.name}}" ng-show="$index == currentIndex"
+              <img class="{{icon.name}}" ng-repeat="category in icon.children" src="/{{selectedCategory.name}}/{{icon.name}}/thumb_{{category.name}}" ng-show="$index == currentIndex"
                 style="width:100%">
                  <button class="w3-button w3-black w3-display-left" ng-click="plusDivs(-1)">&#10094;</button>
-            <button class="w3-button w3-black w3-display-right" ng-click="plusDivs(1)">&#10095;</button>
+                 <button class="w3-button w3-black w3-display-right" ng-click="plusDivs(1)">&#10095;</button>
             </div>
            
           </div>
@@ -210,6 +218,13 @@
              </div> 
              
             </li>
+             <button  ng-click="currentPage=currentPage-1">
+            Previous
+        </button>  {{currentPage+1}}/{{numberOfPages()}}
+              <button ng-click="currentPage=currentPage+1">
+            Next
+        </button>
+             
            
 
           </ul>
@@ -229,19 +244,23 @@
     <script type="text/javascript" src="https://cdn.rawgit.com/JustMaier/6ef7788709d675bd8230/raw/3d39d50e66d8d77e05656ed7dd09298be7e86f1f/ngClickCopy.js"></script>
     <script charset="utf-8">
       var app = angular.module("app", ['ngClickCopy']);
-      app.controller('IconsCtrl',function($scope, $http,$document) {
+      app.controller('IconsCtrl',function($scope, $http) {
        
+        $scope.currentPage = 0;
+        $scope.pageSize = 10;
+        
+
         $http.get('/category').then(function(res) {
           $scope.baseURL = window.location.hostname;
           $scope.port = window.location.port;
           $scope.icons = res.data;
           $scope.categories = res.data.children;
-         
-          
+        
         });
       
         $scope.selectCategory = function(icon)
         {
+           
             var url = '/category?categoryname='+icon.name;
             $http.get(url).then(function(res) {
                 $scope.selectedCategory= icon;
@@ -250,7 +269,7 @@
                 });
         }
         $scope.selectSingleImage = function (icon, category,selectedcurrentIndex) {
-
+          
             $scope.selectedSVGVersionIcon = icon.name;
             $scope.currentSelectedCategory = category.name;
             $scope.showDivs(selectedcurrentIndex);
@@ -262,7 +281,17 @@
           $scope.showDivs = function (n) {
             $scope.currentIndex = n;
           }
+           $scope.numberOfPages = function () {
+              return Math.ceil($scope.icons.children.length / $scope.pageSize);
+            }
+         
       });
+      app.filter('startFrom', function () {
+          return function (input, start) {
+            start = +start; //parse to int
+            return input.slice(start);
+          }
+        });
     </script>
 </body>
 </html>
