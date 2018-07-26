@@ -132,6 +132,31 @@
   .btn-space {
     margin-right: 3px;
 }
+.list-inline>li>a.active {
+    z-index: 6;
+    border: 1px solid blue;
+}
+.list-inline>ul{
+padding: 3px
+}
+
+.list-inline>li {
+    
+    padding-right: 0px;
+    padding-left: 0px;
+}
+.list-inline>li>a,
+ .pagination>li>span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    /* margin-left: -1px; */
+    line-height: 1.42857143;
+    color: #337ab7;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
 .w3-display-right{position:absolute;top:45%;right:0%;transform:translate(0%,-50%);-ms-transform:translate(0%,-50%)}
 .w3-display-left{position:absolute;top:46%;right:-70%;transform:translate(0%,-50%);-ms-transform:translate(0%,-50%)}
 
@@ -150,13 +175,27 @@
         <p><a href="javascript:window.location.href = '/';">Home</a></p>
         <!-- Menu item display starts -->
           <div>
-            <div class="background" style="width: 1700px; height: 60px; white-space: nowrap; overflow-x: scroll; border: 0; padding: 10px;">
-              <ul class="list-inline">
-                <li style="font-size: 70%">
-                  <button ng-repeat="icon in categories" class="btn btn-sm btn-primary btn-space" ng-class="{'selected': icon.selected}" ng-click="selectCategory(icon)">{{icon.name}}</button>
-                </li>
-              </ul
-            </div>
+              <nav>
+                  <ul class="pagination" style="font-size: 70%">
+                    <li class="page-item">
+                     <a class="page-link" ng-click="scrollMenuToLeft(500)"><<</a>
+                    </li>
+                      <li>
+                        <span class="background" style="width: 1500px; height: 50px; white-space: nowrap; overflow-x: scroll; border: 0; padding: 20px;" d-menu-scroll-horizontally="">
+                            <ul class="list-inline">
+                              <li style="font-size: 70%">
+                                <button ng-repeat="icon in categories" class="btn btn-sm btn-primary btn-space" ng-class="{'selected': icon.selected}" ng-click="selectCategory(icon)">{{icon.name}}</button>
+                              </li>
+                            </ul>
+                          </span>
+                        </li>
+                    <li class="page-item">
+                      <a class="page-link" ng-click="scrollMenuToRight(500)">>></a>
+                    </li>
+                   
+                  </ul>
+                </nav>
+
           </div>
            <!-- Menu item display ends -->
       </div>
@@ -204,20 +243,43 @@
 <!-- Pagination Starts -->
                           <nav>
                               <ul class="pagination" style="font-size: 70%">
+                                
+                                  <li class="page-item {{currentPage == 0?'disabled':'enabled'}}">
+                                      <a class="page-link" ng-disabled="currentPage == 0" ng-click="currentPage=0">First</a>
+                                    </li>
+    
                                 <li class="page-item {{currentPage == 0?'disabled':'enabled'}}">
                                   <a class="page-link" ng-disabled="currentPage == 0" ng-click="currentPage == 0?null:currentPage=currentPage-1">Previous</a>
                                 </li>
-                    
-                                <li class="page-item" ng-repeat="_ in ((_ = []) && (_.length=numberOfPages()) && _) track by $index">
-                                  <a class="page-link {{$index==currentPage?'active':'deactive'}}" ng-click="navigatePage($index)">{{$index+1}}</a>
+
+                                <li class="page-item {{currentPage == 0?'disabled':'enabled'}}">
+                                  <a class="page-link" ng-disabled="currentPage == 0" ng-click="scrollToLeft(300)"><<</a>
                                 </li>
-                    
+
+                                <li>
+                                <span style="width: 500px;height:40px; white-space: nowrap; overflow-x: scroll; padding:5px;" d-Span-Scroll-horizontally="">
+                                  <ul class="list-inline-item" style="display: inline-block">
+                                      <ul class="list-inline">
+                                        <li class="page-item" ng-repeat="_ in ((_ = []) && (_.length=numberOfPages()) && _) track by $index">
+                                          <a class="page-link {{$index==currentPage?'active':'deactive'}}" ng-click="navigatePage($index)">{{$index+1}}</a>
+                                        </li>
+                                      </ul>
+                                </ul>
+                              </span>
+                            </li>
+
+                                <li class="page-item {{currentPage >= icons.children.length/pageSize - 1?'disabled':'enabled'}}">
+                                  <a class="page-link" ng-disabled="currentPage >= icons.children.length/pageSize - 1" ng-click="scrollToRight(300)">>></a>
+                                </li>
                                 <li class="page-item {{currentPage >= icons.children.length/pageSize - 1?'disabled':'enabled'}}">
                                   <a class="page-link" ng-disabled="currentPage >= icons.children.length/pageSize - 1" ng-click="currentPage >= icons.children.length/pageSize - 1?null:currentPage=currentPage+1">Next</a>
                                 </li>
+                                <li class="page-item {{currentPage >= icons.children.length/pageSize - 1?'disabled':'enabled'}}">
+                                    <a class="page-link" ng-disabled="currentPage >= icons.children.length/pageSize - 1" ng-click="currentPage = ((icons.children.length/pageSize)|abs)">Last</a>
+                                  </li>
                               </ul>
                             </nav>
-<!-- Pagination Ends -->
+<!-- Pagination Ends -->  
 
                       </div> 
                       <div class="col-md-2 text-center" style="border:5px solid green">
@@ -254,7 +316,7 @@
                   <button type="button" class="btn btn-primary w3-display-left" style="width:2px;height:150px" ng-click="scrollToLeft()">&#10094;</button>
                   <!-- <button type="button" class="btn btn-primary w3-display-left" style="width:2px;height:150px" ng-click="scrollToLeft()">&#10094;</button> -->
                   <!-- <button type="button" class="btn btn-primary w3-display-right" style="width:2px;height:140px" ng-click="scrollToRight()">&#10095;</button> -->
-</div>
+          </div>
 
                <!-- For Single Image display starts -->
                <!-- <div ng-if="selectedSVGVersionIcon" ng-show="icon.name == currentSelectedCategory"> -->
@@ -347,6 +409,13 @@
             return input.slice(start);
           }
         });
+
+        app.filter('abs', ['$window', function ($window) {
+            return function (n) {
+              return $window.Math.abs($window.parseInt(n));
+            }
+          }]);
+
        app.directive('dScrollHorizontally', function () {
           return {
             restrict: 'A',
@@ -360,6 +429,42 @@
               scope.scrollToLeft = function () {
                
                 elem[0].scrollLeft -= Number(attr.dScrollHorizontally);
+              }
+
+            }
+          }
+        });
+        app.directive('dSpanScrollHorizontally', function () {
+          return {
+            restrict: 'A',
+            link: function (scope, elem, attr) {
+            
+              scope.scrollToRight = function (n) {
+               
+                elem[0].scrollLeft += Number(n);
+              }
+
+              scope.scrollToLeft = function (n) {
+               
+                elem[0].scrollLeft -= Number(n);
+              }
+
+            }
+          }
+        });
+        app.directive('dMenuScrollHorizontally', function () {
+          return {
+            restrict: 'A',
+            link: function (scope, elem, attr) {
+            
+              scope.scrollMenuToRight = function (n) {
+              
+                elem[0].scrollLeft += Number(n);
+              }
+
+              scope.scrollMenuToLeft = function (n) {
+             
+                elem[0].scrollLeft -= Number(n);
               }
 
             }
