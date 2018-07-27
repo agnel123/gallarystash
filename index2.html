@@ -245,7 +245,7 @@ padding: 3px
                               <ul class="pagination" style="font-size: 70%">
                                 
                                   <li class="page-item {{currentPage == 0?'disabled':'enabled'}}">
-                                      <a class="page-link" ng-disabled="currentPage == 0" ng-click="currentPage=0">First</a>
+                                      <a class="page-link" ng-disabled="currentPage == 0" ng-click="currentPage=0;scrollToLeft(700)">First</a>
                                     </li>
     
                                 <li class="page-item {{currentPage == 0?'disabled':'enabled'}}">
@@ -275,7 +275,7 @@ padding: 3px
                                   <a class="page-link" ng-disabled="currentPage >= icons.children.length/pageSize - 1" ng-click="currentPage >= icons.children.length/pageSize - 1?null:currentPage=currentPage+1">Next</a>
                                 </li>
                                 <li class="page-item {{currentPage >= icons.children.length/pageSize - 1?'disabled':'enabled'}}">
-                                    <a class="page-link" ng-disabled="currentPage >= icons.children.length/pageSize - 1" ng-click="currentPage = ((icons.children.length/pageSize)|abs)">Last</a>
+                                    <a class="page-link" ng-disabled="currentPage >= icons.children.length/pageSize - 1" ng-click="currentPage = ((icons.children.length/pageSize)|abs);scrollToRight(700)">Last</a>
                                   </li>
                               </ul>
                             </nav>
@@ -316,7 +316,7 @@ padding: 3px
                   <button type="button" class="btn btn-primary w3-display-left" style="width:2px;height:150px" ng-click="scrollToLeft()">&#10094;</button>
                   <!-- <button type="button" class="btn btn-primary w3-display-left" style="width:2px;height:150px" ng-click="scrollToLeft()">&#10094;</button> -->
                   <!-- <button type="button" class="btn btn-primary w3-display-right" style="width:2px;height:140px" ng-click="scrollToRight()">&#10095;</button> -->
-          </div>
+  </div>
 
                <!-- For Single Image display starts -->
                <!-- <div ng-if="selectedSVGVersionIcon" ng-show="icon.name == currentSelectedCategory"> -->
@@ -373,7 +373,7 @@ padding: 3px
       
         $scope.selectCategory = function(icon)
         {
-           
+            $scope.currentPage =0;
             var url = '/category?categoryname='+icon.name;
             $http.get(url).then(function(res) {
                 $scope.selectedCategory= icon;
